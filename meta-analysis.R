@@ -11,13 +11,7 @@ library(corrplot)
 library(RColorBrewer)
 
 #set working directory
-setwd("R://GitHub/subtypes/")
-
-#setwd("R://GitHub/subtypes/oldage/")
-#setwd("R://GitHub/subtypes/allage/")
-
-#setwd("R://GitHub/subtypes/prevalent/")
-#setwd("R://GitHub/subtypes/incident/")
+setwd("R://GitHub/delirium_subtypes_metaanalysis/")
 
 #import data 
 #*create subtype and subtype_n variables so subtypes can be identified as number/character
@@ -25,24 +19,6 @@ setwd("R://GitHub/subtypes/")
 data <- read_csv("data.csv") %>%
   mutate(subtype = ifelse(!is.na(hyperactive), "hyper", ifelse(!is.na(hypoactive), "hypo", ifelse(!is.na(mixed), "mix", ifelse(!is.na(nosubtype), "nosub", ifelse(!is.na(combo_hypomix), "hypomix",ifelse(!is.na(combo_hypermix), "hypermix",NA))))))) %>%
   mutate(subtype_n = ifelse(!is.na(hyperactive), 1, ifelse(!is.na(hypoactive), 2, ifelse(!is.na(mixed), 3, ifelse(!is.na(nosubtype), 4, ifelse(!is.na(combo_hypomix), 5,ifelse(!is.na(combo_hypermix), 6,NA)))))))
-
-# #load age cutoff data
-# age_cutoff <- read_csv("demo_data.csv") %>%
-#   select(covidence_id,age_cutoff)
-# 
-# #add age cutoff data to df and remove 'all' age group (only keep those >60)
-# data <- left_join(data,age_cutoff,by="covidence_id") %>%
-#   filter(age_cutoff =="all")
-
-
-# #load delirium type data
-# delirium_type <- read_csv("demo_data.csv") %>%
-#   select(covidence_id,delirium_type)
-# 
-# #add delirium type data to df and remove 'all' age group (only keep those >60)
-# data <- left_join(data,delirium_type,by="covidence_id") %>%
-#   filter(delirium_type =="incident")
-
 
 #create subtypes df to be used to identify subtype_n later
 subtypes <- data.frame(subtype = c("hyper", "hypo","mix","nosub","hypomix","hypermix"),
@@ -414,7 +390,7 @@ a10 <- full_join(s1,s2,by=c("id", "covidence_id","factor","test_subscale","test_
 #create analysis df
 comparison <- rbind(a1,a2,a3,a4,a5,a6,a7,a8,a9,a10) #this document has one row per data_type/factor/cutoff for each subtype comparison (which comparison is represented by the analysis variable)
 
-#### CALCULATE COMPARISON GROUP EFFECT SIZES ####
+#### CALCULATE EFFECT SIZES ####
 
 #create id variable (id = row number)
 comparison <- comparison %>%
@@ -470,7 +446,7 @@ comparison_es <- comparison_es %>%
   filter(row_number()==1)%>%
   ungroup() #%>%
 
-#### CREATE COMPARISON GROUP ANALYSIS DF ####
+#### CREATE ANALYSIS DF ####
 
 #create comparison analysis df
 #average across necessary variables to make complete analysis file (each study represented up to once per analysis)
@@ -512,7 +488,7 @@ output$trim_k0 <- as.numeric(output$trim_k0)
 output$trim_b <- as.numeric(output$trim_b)
 output$trim_se <- as.numeric(output$trim_se)
 
-#### COMPARISON GROUPS META-ANALYSIS ####
+#### META-ANALYSIS ####
 
 #give unique n to each unique factor across all studies
 factors <- c_analysis %>%
@@ -578,81 +554,81 @@ output <- left_join(output,factors,by = "factor_n") %>%
 
 #### PUBLICATION BIAS ####
 
-# id <- 1:nrow(output)
-# 
-# #create funnel plots
-# for(i in id) {
-#   if(output[i,"type"]==1) {
-#       factor_name <- output[i,"factor"]
-#       comp_name <- output[i,"subtype_comp"]
-#       funnel_name <- paste0(factor_name, "_comp_", comp_name, "_cat.tiff")
-#       
-#       t <- output[[i,"type"]]
-#       a<- output[[i,"subtype_comp"]]
-#       f<- output[[i,"factor_n"]]
-#       
-#       df <- c_analysis %>%
-#         filter(type == t) %>%
-#         filter(analysis == a) %>%
-#         filter(factor_n == f) 
-#       
-#       ma <- rma(yi = yi, vi = vi, data = df, method = "PM", test = "knha")
-#       
-#       tiff(filename = funnel_name, width = 8, height = 6, units = "in", res = 300, compression = "lzw")
-#       funnel(ma, trans = exp, xlab = "OR")
-#       dev.off()
-#   }
-#   if(output[i,"type"]==2) {
-#     factor_name <- output[i,"factor"]
-#     comp_name <- output[i,"subtype_comp"]
-#     funnel_name <- paste0(factor_name, "_comp_", comp_name, "_cont.tiff")
-#     
-#     t <- output[[i,"type"]]
-#     a<- output[[i,"subtype_comp"]]
-#     f<- output[[i,"factor_n"]]
-#     
-#     df <- c_analysis %>%
-#       filter(type == t) %>%
-#       filter(analysis == a) %>%
-#       filter(factor_n == f) 
-#     
-#     ma <- rma(yi = yi, vi = vi, data = df, method = "PM", test = "knha")
-#     
-#     tiff(filename = funnel_name, width = 8, height = 6, units = "in", res = 300, compression = "lzw")
-#     funnel(ma, trans = exp, xlab = "OR")
-#     dev.off()
-#   }
-# }
-# 
-# #publication bias assessment (for analyses with k>9)
-# for(i in id) {   
-#       if(output[i,"k"]>9){
-#         t <- output[[i,"type"]]
-#         a<- output[[i,"subtype_comp"]]
-#         f<- output[[i,"factor_n"]]
-#         
-#         df <- c_analysis %>%
-#           filter(type == t) %>%
-#           filter(analysis == a) %>%
-#           filter(factor_n == f) 
-#         
-#         ma <- rma(yi = yi, vi = vi, data = df, method = "PM", test = "knha")
-#         
-#         reg <- regtest(ma, model = "rma")
-#         
-#         output[i,"eggers_int"] <- reg$zval
-#         output[i,"eggers_p"]<- reg$pval
-#         
-#         if(output[i,"eggers_p"]<0.1){
-#           trim <- trimfill(ma)
-#           
-#           output[i,"trim_k0"] <- trim$k0
-#           output[i,"trim_b"] <- exp(trim$b)
-#           output[i,"trim_se"] <- trim$se
-#         
-#       }
-#     }
-#   }
+id <- 1:nrow(output)
+
+#create funnel plots
+for(i in id) {
+  if(output[i,"type"]==1) {
+      factor_name <- output[i,"factor"]
+      comp_name <- output[i,"subtype_comp"]
+      funnel_name <- paste0(factor_name, "_comp_", comp_name, "_cat.tiff")
+
+      t <- output[[i,"type"]]
+      a<- output[[i,"subtype_comp"]]
+      f<- output[[i,"factor_n"]]
+
+      df <- c_analysis %>%
+        filter(type == t) %>%
+        filter(analysis == a) %>%
+        filter(factor_n == f)
+
+      ma <- rma(yi = yi, vi = vi, data = df, method = "PM", test = "knha")
+
+      tiff(filename = funnel_name, width = 8, height = 6, units = "in", res = 300, compression = "lzw")
+      funnel(ma, trans = exp, xlab = "OR")
+      dev.off()
+  }
+  if(output[i,"type"]==2) {
+    factor_name <- output[i,"factor"]
+    comp_name <- output[i,"subtype_comp"]
+    funnel_name <- paste0(factor_name, "_comp_", comp_name, "_cont.tiff")
+
+    t <- output[[i,"type"]]
+    a<- output[[i,"subtype_comp"]]
+    f<- output[[i,"factor_n"]]
+
+    df <- c_analysis %>%
+      filter(type == t) %>%
+      filter(analysis == a) %>%
+      filter(factor_n == f)
+
+    ma <- rma(yi = yi, vi = vi, data = df, method = "PM", test = "knha")
+
+    tiff(filename = funnel_name, width = 8, height = 6, units = "in", res = 300, compression = "lzw")
+    funnel(ma, trans = exp, xlab = "OR")
+    dev.off()
+  }
+}
+
+#publication bias assessment (for analyses with k>9)
+for(i in id) {
+      if(output[i,"k"]>9){
+        t <- output[[i,"type"]]
+        a<- output[[i,"subtype_comp"]]
+        f<- output[[i,"factor_n"]]
+
+        df <- c_analysis %>%
+          filter(type == t) %>%
+          filter(analysis == a) %>%
+          filter(factor_n == f)
+
+        ma <- rma(yi = yi, vi = vi, data = df, method = "PM", test = "knha")
+
+        reg <- regtest(ma, model = "rma")
+
+        output[i,"eggers_int"] <- reg$zval
+        output[i,"eggers_p"]<- reg$pval
+
+        if(output[i,"eggers_p"]<0.1){
+          trim <- trimfill(ma)
+
+          output[i,"trim_k0"] <- trim$k0
+          output[i,"trim_b"] <- exp(trim$b)
+          output[i,"trim_se"] <- trim$se
+
+      }
+    }
+  }
 
 #### ADD LABELS TO OUTPUT FILE ####
 #add broad factor categories
@@ -766,7 +742,6 @@ comp_output_cont <- comp_output %>%
 #pivot wider so each row = one broad category and each column = a subtype comparison
 comp_wide_cont <- comp_output_cont %>%
   pivot_wider(names_from = comp_lab, values_from = b) %>%
-  #select(factor,`hypoactive vs hyperactive`,`hypoactive vs mixed`,`hyperactive vs mixed`,`hypoactive vs remaining`,`hyperactive vs remaining`,`mixed vs remaining`)
   select(factor,`hypoactive vs hyperactive`,`hypoactive vs mixed`,`hypoactive vs no motor subtype`,`hyperactive vs mixed`,`hyperactive vs no motor subtype`,`mixed vs no motor subtype`,`hypoactive vs remaining`,`hyperactive vs remaining`,`mixed vs remaining`,`no motor subtype vs remaining`)
 
 #change row names to the categories (so this is recognised by corr plot)
@@ -782,10 +757,9 @@ comp_output_cont_p <- comp_output %>%
   filter(type ==2) %>%
   arrange(desc(new_broad,new_sub,factor)) %>%
   select(factor, comp_lab, p)
-#comp_output_cont_p$p <- format(round(comp_output_cont_p$p,3))
+
 comp_wide_cont_p <- comp_output_cont_p %>%
   pivot_wider(names_from = comp_lab, values_from = p)%>%
-  #select(factor,`hypoactive vs hyperactive`,`hypoactive vs mixed`,`hyperactive vs mixed`,`hypoactive vs remaining`,`hyperactive vs remaining`,`mixed vs remaining`)
   select(factor,`hypoactive vs hyperactive`,`hypoactive vs mixed`,`hypoactive vs no motor subtype`,`hyperactive vs mixed`,`hyperactive vs no motor subtype`,`mixed vs no motor subtype`,`hypoactive vs remaining`,`hyperactive vs remaining`,`mixed vs remaining`,`no motor subtype vs remaining`)
 
 comp_wide_cont_p <- as.data.frame(comp_wide_cont_p)
@@ -808,7 +782,6 @@ comp_output_cat <- comp_output %>%
 
 comp_wide_cat <- comp_output_cat %>%
   pivot_wider(names_from = comp_lab, values_from = exp_or)%>%
-  #select(factor,`hypoactive vs hyperactive`,`hypoactive vs mixed`,`hyperactive vs mixed`,`hypoactive vs remaining`,`hyperactive vs remaining`,`mixed vs remaining`)
   select(factor,`hypoactive vs hyperactive`,`hypoactive vs mixed`,`hypoactive vs no motor subtype`,`hyperactive vs mixed`,`hyperactive vs no motor subtype`,`mixed vs no motor subtype`,`hypoactive vs remaining`,`hyperactive vs remaining`,`mixed vs remaining`,`no motor subtype vs remaining`)
 
 comp_wide_cat <- as.data.frame(comp_wide_cat)
@@ -822,10 +795,9 @@ comp_output_cat_p <- comp_output %>%
   filter(type == 1) %>%
   arrange(desc(new_broad,new_sub,factor)) %>%
   select(factor, comp_lab, p)
-#comp_output_cat_p$p <- format(round(comp_output_cat_p$p,3))
+
 comp_wide_cat_p <- comp_output_cat_p %>%
   pivot_wider(names_from = comp_lab, values_from = p)%>%
-  #select(factor,`hypoactive vs hyperactive`,`hypoactive vs mixed`,`hyperactive vs mixed`,`hypoactive vs remaining`,`hyperactive vs remaining`,`mixed vs remaining`)
   select(factor,`hypoactive vs hyperactive`,`hypoactive vs mixed`,`hypoactive vs no motor subtype`,`hyperactive vs mixed`,`hyperactive vs no motor subtype`,`mixed vs no motor subtype`,`hypoactive vs remaining`,`hyperactive vs remaining`,`mixed vs remaining`,`no motor subtype vs remaining`)
 
 comp_wide_cat_p <- as.data.frame(comp_wide_cat_p)
