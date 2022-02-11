@@ -1,0 +1,76 @@
+Column Name,Description
+author,Lead author last name
+year,Year of publication
+covidence_id,Unique identifier from Covidence (systematic review screening website)
+title,Title of journal article
+country,Country of study
+study_setting,Setting/s in which the study took place
+recruitment_time_period,Time period of recruitment
+study_design,"Design of study (e.g., prospective cohort, case-control, etc)"
+age_cutoff,Age cutoff (if any) or 'all' if all ages (>18) included
+delirium_type,Type of delirium (prevalent/incident)
+condition_location,When/where delirium diagnosed
+delirium_tool,Tool/s used to diagnose deliirum
+subtype_class,Subtype classification method/s
+sample_size_total,Total sample size (delirium + no delirium) included in the study
+sample_delirium,Total sample size with delirium
+sample_no_delirium,Total sample size without delirium
+N_hyper,Number with hyperactive delirium
+N_hypo,Number with hypoactive delirium
+N_mix,Number with mixed delirium
+N_nosub,Number with no motor subtype
+N_combo,Number with one of two subtypes
+mixsample_group,The two subtypes for N_combo count
+subtype_count,no' for those which cannot be used for subtype counts due to non-exclusive categories (participants classified on symptoms and could be represented in multiple groups)
+sex_data_type,Type of sex data reported (N/percentage)
+male,N/percentage of males
+female,N/percentage of females
+sex_N,Total sample size for sex data (just delirium group if possible)
+sex_notes,Notes on the sample size extracted for sex data
+age_average_data_type,"Age: Type of average data (mean, median)"
+age_average,Age: Average (type specified in average_type column) data
+age_variance_type,"Age: Type of variance data (SD, SEM, etc)"
+age_variance,Age: Variance (type specified in variance_type column) data
+age_range_type,"Age: Type of range data (range, IQR, etc)"
+age_range_ll,Age: Lower limit of range 
+age_range_ul,Age: Upper limit of range
+age_N,Total sample size for age data (just delirium group if possible)
+age_notes,Notes on the sample size extracted for age data
+age_g1,"If age reported across multiple delirium groups (e.g. by motor subtypes), specify what group 1 data (extracted as age_average, age_variance) data refers to"
+age_g1_N,Sample size for age data group 1 (should be the same as age_N)
+age_g2,Which group is age data reported by next (group 2)
+age_g2_N2,Sample size for age data group 2
+age_average_data_type_g2,"Age group 2: Type of average data (mean, median)"
+age_average_g2,Age group 2: Average (type specified in average_type column) data
+age_variance_type_g2,"Age group 2: Type of variance data (SD, SEM, etc)"
+age_variance_g2,Age group 2: Variance (type specified in variance_type column) data
+age_range_type_g2,"Age group 2: Type of range data (range, IQR, etc)"
+age_range_ll_g2,Age group 2: Lower limit of range 
+age_range_ul_g2,Age group 2: Upper limit of range
+age_g3,Which group is age data reported by next (group 3)
+age_g3_N2,Sample size for age data group 3
+age_average_data_type_g3,"Age group 3: Type of average data (mean, median)"
+age_average_g3,Age group 3: Average (type specified in average_type column) data
+age_variance_type_g3,"Age group 3: Type of variance data (SD, SEM, etc)"
+age_variance_g3,Age group 3: Variance (type specified in variance_type column) data
+age_range_type_g3,"Age group 3: Type of range data (range, IQR, etc)"
+age_range_ll_g3,Age group 3: Lower limit of range 
+age_range_ul_g3,Age group 3: Upper limit of range
+age_g4,Which group is age data reported by next (group 4)
+age_g4_N2,Sample size for age data group 4
+age_average_data_type_g4,"Age group 4: Type of average data (mean, median)"
+age_average_g4,Age group 4: Average (type specified in average_type column) data
+age_variance_type_g4,"Age group 4: Type of variance data (SD, SEM, etc)"
+age_variance_g4,Age group 4: Variance (type specified in variance_type column) data
+age_range_type_g4,"Age group 4: Type of range data (range, IQR, etc)"
+age_range_ll_g4,Age group 4: Lower limit of range 
+age_range_ul_g4,Age group 4: Upper limit of range
+age_g5,Which group is age data reported by next (group 5)
+age_g5_N2,Sample size for age data group 5
+age_average_data_type_g5,"Age group 5: Type of average data (mean, median)"
+age_average_g5,Age group 5: Average (type specified in average_type column) data
+age_variance_type_g5,"Age group 5: Type of variance data (SD, SEM, etc)"
+age_variance_g5,Age group 5: Variance (type specified in variance_type column) data
+age_range_type_g5,"Age group 5: Type of range data (range, IQR, etc)"
+age_range_ll_g5,Age group 5: Lower limit of range 
+age_range_ul_g5,Age group 5: Upper limit of range

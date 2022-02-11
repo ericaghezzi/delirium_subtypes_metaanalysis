@@ -1,0 +1,33 @@
+Column Name,Description
+author,First author
+year,Year of publication
+covidence_id,Unique identifier from Covidence (systematic review screening website)
+hyperactive,"If = 1, this row reports data for the hyperactive group for this study"
+hypoactive,"If = 1, this row reports data for the hypoactive group for this study"
+mixed,"If = 1, this row reports data for the mixed group  for this study"
+nosubtype,"If = 1, this row reports data for the no motor subtype group  for this study"
+combo_hypomix,"If = 1, this row reports data for the combined hypoactive/mixed group for this study"
+combo_hypermix,"If = 1, this row reports data for the combined hyperactive/mixed group for this study"
+factor_category,Broad category of the factor this row of data pertains to
+factor,Factor this row of data pertains to
+factor_details,Details of the factor this row of data pertains to
+test_used,Test used to measure the factor
+test_subscale,Subscale of the test used to measure the factor
+data_type,Data type: cat = Categorical; cont = Continuous
+direction,"Direction of effect (positive = more of the characteristic, negative = less of the characteristic)"
+cont_units,Units of the continuous factor this row of data pertains to
+test_cutoff,Cut-off used to determine presence of the categorical factor this row of data pertains to
+cutoff_notes,Notes on the cut-off used to determine presence of the categorical factor this row of data pertains to
+categorical_notes,Notes regarding categorical data this row pertains to
+N_with_condition,Number with this subtype with the categorical factor (based on cut-off critera)
+N_without_condition,Number with this subtype without the categorical factor (based on cut-off criteria)
+percentage_with_condition,Percentage of those with this subtype with the categorical factor (based on cut-off criteria)
+N_total,Total number reported with this subtype
+N_notes,Notes on the sample size of this subtype
+average_type,"Type of average data (mean, median)"
+average,Average (type specified in average_type column) data
+variance_type,"Type of variance data (SD, SEM, etc)"
+variance,Variance (type specified in variance_type column) data
+range_type,"Type of range data (range, IQR, etc)"
+range_ll,Lower limit of range 
+range_ul,Upper limit of range
